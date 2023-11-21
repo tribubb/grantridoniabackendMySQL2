@@ -27,11 +27,15 @@ jobs:
           npm run build --if-present
           npm run test --if-present
 
+      - name: Zip artifact
+        run: Compress-Archive -Path .\* -DestinationPath node-app.zip
+
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: .
+          path: ./node-app.zip
+
 
   deploy:
     runs-on: ubuntu-latest
@@ -41,10 +45,16 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
+      - name: Delete existing artifact
+        run: rm -rf ./node-app.zip
+
       - name: Download artifact from build job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v2
         with:
           name: node-app
+  
+      - name: Unzip artifact
+        run: unzip -q node-app.zip -d deploy-folder
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
