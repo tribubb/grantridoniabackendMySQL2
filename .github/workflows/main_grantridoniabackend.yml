@@ -62,5 +62,5 @@ jobs:
         with:
           app-name: 'grantridoniabackend'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B795DDB3A3194121B0624D42D13B5041 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DED49F16D95D479A9FA5A1EC6122F2E3 }}
           package: .
