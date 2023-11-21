@@ -8,6 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
+const users_entity_1 = require("./users/users.entity");
+const market_entity_1 = require("./market/market.entity");
+const typeorm_1 = require("@nestjs/typeorm");
+const config_1 = require("@nestjs/config");
+const users_module_1 = require("./users/users.module");
+const market_module_1 = require("./market/market.module");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
 let AppModule = class AppModule {
@@ -15,7 +21,17 @@ let AppModule = class AppModule {
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [],
+        imports: [
+            users_module_1.UserModule,
+            market_module_1.MarketModule,
+            config_1.ConfigModule.forRoot(),
+            typeorm_1.TypeOrmModule.forRoot({
+                type: 'mysql',
+                url: process.env.MYSQLCONNSTR_localdb,
+                entities: [users_entity_1.Users, market_entity_1.Market],
+                synchronize: true,
+            }),
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })
