@@ -10,8 +10,7 @@ import { AppService } from './app.service';
 
 // Formula: import entity AND module for each table.
 @Module({
-    imports: [
-    ],
+  imports: [],
   controllers: [AppController],
   providers: [AppService],
 })
