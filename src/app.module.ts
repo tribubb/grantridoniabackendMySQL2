@@ -11,15 +11,6 @@ import { AppService } from './app.service';
 // Formula: import entity AND module for each table.
 @Module({
     imports: [
-      UserModule,
-      MarketModule,
-      ConfigModule.forRoot(),
-      TypeOrmModule.forRoot({
-          type: 'mysql',
-          url: process.env.MYSQLCONNSTR_localdb,
-          entities: [Users, Market],
-          synchronize: true,
-      }),
     ],
   controllers: [AppController],
   providers: [AppService],
