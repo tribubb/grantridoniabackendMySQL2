@@ -25,11 +25,24 @@ exports.AppModule = AppModule = __decorate([
             users_module_1.UserModule,
             market_module_1.MarketModule,
             config_1.ConfigModule.forRoot(),
-            typeorm_1.TypeOrmModule.forRoot({
-                type: 'mysql',
-                url: process.env.MYSQLCONNSTR_localdb,
-                entities: [users_entity_1.Users, market_entity_1.Market],
-                synchronize: true,
+            typeorm_1.TypeOrmModule.forRootAsync({
+                imports: [config_1.ConfigModule],
+                useFactory: async (configService) => {
+                    const connectionString = configService.get('MYSQLCONNSTR_localdb');
+                    const hostAndPortMatch = connectionString.match(/Data Source=([^;]+)/);
+                    const [host, port] = hostAndPortMatch ? hostAndPortMatch[1].split(':') : ['localhost', '3306'];
+                    return {
+                        type: 'mysql',
+                        host,
+                        port: parseInt(port, 10),
+                        username: configService.get('MYSQLCONNSTR_localdb').match(/User Id=([^;]+)/)[1],
+                        password: configService.get('MYSQLCONNSTR_localdb').match(/Password=([^;]+)/)[1],
+                        database: configService.get('MYSQLCONNSTR_localdb').match(/Database=([^;]+)/)[1],
+                        entities: [users_entity_1.Users, market_entity_1.Market],
+                        synchronize: true,
+                    };
+                },
+                inject: [config_1.ConfigService],
             }),
         ],
         controllers: [app_controller_1.AppController],
