@@ -26,16 +26,12 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
-      
-      - name: Zip artifact
-        run: Compress-Archive -Path .\* -DestinationPath node-app.zip
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: node-app
-          path: ./node-app.zip
-
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -45,22 +41,16 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Delete existing artifact
-        run: rm -rf ./node-app.zip
-
       - name: Download artifact from build job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: node-app
-  
-      - name: Unzip artifact
-        run: unzip -q node-app.zip -d deploy-folder
-      
+
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
           app-name: 'grantridoniabackend'
           slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B795DDB3A3194121B0624D42D13B5041 }}
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1E311636506D4107A7E6ADF24CD99F4D }}
