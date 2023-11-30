@@ -3,6 +3,7 @@ import { Controller, Post, Body, Res, HttpStatus, Get, Delete, Param, Put, NotFo
 import { MarketService } from './market.service';
 import { Market } from './market.entity';
 
+// Handle success to service, and display error messages on fail
 @Controller('market')
 export class MarketController {
   constructor(private service: MarketService) {}
@@ -17,34 +18,34 @@ export class MarketController {
     return this.service.createMarketItem(marketItemData);
   }
 
-// Put the less basic put methods first, previous issues with :id method first.
-@Put(':id/add-stock')
-async addStock(@Param('id') id: number, @Res() res: Response) {
-  try {
-    const updatedItem = await this.service.addStock(Number(id));
-    if (updatedItem) {
-      return res.status(HttpStatus.OK).json({ stock: updatedItem.stock });
-    }
-    return res.status(HttpStatus.NOT_FOUND).send();
-  } catch (error) {
-    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
-  }
-}
-
-@Put(':id/remove-stock')
-async removeStock(@Param('id') id: number, @Res() res: Response) {
-  try {
-    const updatedItem = await this.service.removeStock(Number(id));
-    if (updatedItem) {
-      return res.status(HttpStatus.OK).json({ stock: updatedItem.stock });
-    }
+  // Put the less basic put methods first, previous issues with :id method first.
+  @Put(':id/add-stock')
+  async addStock(@Param('id') id: number, @Res() res: Response) {
+    try {
+      const updatedItem = await this.service.addStock(Number(id));
+      if (updatedItem) {
+        return res.status(HttpStatus.OK).json({ stock: updatedItem.stock });
+      }
       return res.status(HttpStatus.NOT_FOUND).send();
-    } 
-    catch (error) 
-    {
+    } catch (error) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
     }
   }
+
+  @Put(':id/remove-stock')
+  async removeStock(@Param('id') id: number, @Res() res: Response) {
+    try {
+      const updatedItem = await this.service.removeStock(Number(id));
+      if (updatedItem) {
+        return res.status(HttpStatus.OK).json({ stock: updatedItem.stock });
+      }
+        return res.status(HttpStatus.NOT_FOUND).send();
+      } 
+      catch (error) 
+      {
+        return res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+      }
+    }
 
   @Put(':id')
   async updateMarketItem(@Param('id') id: string, @Body() marketItemData: any): Promise<Market | null> {
@@ -55,7 +56,6 @@ async removeStock(@Param('id') id: number, @Res() res: Response) {
   async deleteMarketItemsByUsername(@Param('username') username: string): Promise<void> {
     const result = await this.service.deleteMarketItemsByUsername(username);
 
-    // Handle the result as needed
     if (result.affected === 0) {
       throw new NotFoundException(`Market items for username ${username} not found`);
     }

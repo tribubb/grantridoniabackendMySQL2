@@ -4,6 +4,7 @@ import { Response } from 'express';
 
 import { UsersService } from './users.service';
 
+// Handle success to service, and display error messages on fail
 @Controller('user')
 export class UsersController {
   constructor(private service: UsersService) {}
@@ -38,15 +39,13 @@ export class UsersController {
     try {
       const deletedUser = await this.service.deleteUser(username);
 
-      if (!deletedUser) 
-      {
+      if (!deletedUser) {
         throw new NotFoundException(`Username: ${username} not found`);
       }
 
       return res.status(HttpStatus.NO_CONTENT).send();
     } 
-    catch (error) 
-    {
+    catch (error) {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'Error occurred while deleting this user' });
     }
   } 

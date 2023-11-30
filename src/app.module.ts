@@ -8,7 +8,7 @@ import { MarketModule } from './market/market.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-// Formula: import entity AND module for each table.
+// IMPDEV: import entity AND module for each table.
 
 @Module({
   imports: [
